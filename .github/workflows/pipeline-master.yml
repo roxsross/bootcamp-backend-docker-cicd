@@ -27,7 +27,6 @@ jobs:
 
   deploy_aws:
     runs-on: ubuntu-latest
-    needs: build-docker
     steps:
     - uses: actions/checkout@v3
     - name: Generate deployment package

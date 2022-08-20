@@ -1,6 +1,6 @@
 {
   "name": "training-ecs-aws-girl",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "AWS ECS&ECR Level 100",
   "main": "index.js",
   "scripts": {
