@@ -1,0 +1,44 @@
+name: pipeline
+
+on:
+  pull_request:
+    branches: [ "master" ]
+
+env:
+  REGISTRY: roxsross12
+  IMAGE_NAME: bootcamp-backend-docker
+
+jobs:
+
+  init:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [14.x]
+    steps:
+    - uses: actions/checkout@v3
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+    - run: npm install
+    - run: npm test
+
+  deploy_aws:
+    runs-on: ubuntu-latest
+    needs: build-docker
+    steps:
+    - uses: actions/checkout@v3
+    - name: Generate deployment package
+      run: zip -r deploy.zip . -x '*.git*'
+    - name: Deploy to EB
+      uses: einaregilsson/beanstalk-deploy@v20
+      with:
+        aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        application_name: bootcamp-295devops
+        environment_name: Bootcamp295devops-env
+        version_label: ${{ github.sha }}
+        region: us-east-1
+        deployment_package: deploy.zip     
