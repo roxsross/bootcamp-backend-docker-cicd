@@ -8,8 +8,6 @@ var pjson = require('./package.json');
 app.use(morgan('dev'));
 
 // Constants
-const PORT = 3000;
-const HOST = '0.0.0.0' || 'localhost';
 const by = 'https://roxs.295devops.com'
 
 app.get('/getenv/*', function (req, res) {
@@ -32,6 +30,8 @@ app.get('/*', function (req, res) {
   res.send('Hello Bootcamp Version to'+req.url+'<hr>package json:'+pjson.version);
 });
 
-app.listen(PORT, HOST)
+const APP_PORT = process.env.PORT || 3000;
 
-console.log(`Example app listening on http://${HOST}:${PORT} or http://localhost:${PORT} !`);
+var listener = app.listen(APP_PORT, function(){
+  console.log('Listening on port ' + listener.address().port); //Listening on port APP_PORT
+});

@@ -45,3 +45,15 @@ jobs:
       with:
         push: true
         tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+
+  deploy_heroku:
+    runs-on: ubuntu-latest
+    needs: build-docker
+    steps:
+      - uses: actions/checkout@v2
+      - uses: akhileshns/heroku-deploy@v3.12.12 # This is the action
+        with:
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_app_name: "bootcamp-backend-docker" #Must be unique in Heroku
+          heroku_email: "roxsrossve@gmail.com"
+          usedocker: true      
